@@ -74,20 +74,43 @@ INSERT INTO `products` (`id`, `description`, `price`) VALUES
 -- Table structure for table `users`
 --
 
-CREATE TABLE `users` (
+[6:30 p. m., 17/6/2020] Lucas Primo: router.post('/order', async (req, res) => {
+    const user = req.user;
+    try {
+        const { status, description, payment_method, address, product_id } = req.body
+        const insertOrderQuery = 'INSERT INTO orders (id, status, time, description, payment_method, user_id, address, product_id) VALUES (?,?,?,?,?,?,?,?);';
+        await dbConnection.query(insertOrderQuery,
+            { replacements: [Math.floor(Math.random() * 10000000), status, new Date(), description, payment_method, user.id, address, product_id] });
+        return res.status(200).json({ status: 'order created' });
+    } catch (error) {
+        return res.status(500).json({ error: error })
+    }
+})
+
+
+ CREATE TABLE `orders` (
   `id` int(100) NOT NULL,
-  `user` varchar(100) NOT NULL,
-  `name` varchar(150) NOT NULL,
-  `email` varchar(100) NOT NULL,
-  `phone` varchar(100) DEFAULT NULL,
+  `status` varchar(50) NOT NULL,
+  `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `description` varchar(200) NOT NULL,
+  `payment_method` varchar(50) NOT NULL,
+  `user_id` varchar(100) NOT NULL,
   `address` varchar(100) DEFAULT NULL,
-  `password` varchar(50) NOT NULL,
-  `rol` varchar(250) DEFAULT NULL
+  `product_id` decimal(10,0) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Dumping data for table `users`
+-- Dumping data for table `orders`
 --
+
+INSERT INTO `orders` (`id`, `status`, `time`, `description`, `payment_method`, `user_id`, `address`, `product_id`) VALUES
+(1, 'Nuevo', '2020-06-12 23:40:20', '1 Milanesa napolitana con papas fritas, 1 lomo al champignon', 'tarjeta', 'Armandoestebanquito', 'olimpia 1409', '1'),
+(2, 'Nuevo', '2020-06-12 23:40:27', '1 tallarines a la pomarola', 'efectivo', 'NicolasMarri', 'Av.Colón 5050', '2');
+
+
+-- --
+-- -- Dumping data for table `users`
+-- --
 
 INSERT INTO `users` (`id`, `user`, `name`, `email`, `phone`, `address`, `password`, `rol`) VALUES
 (1, 'nicolasmarri', 'Nicolas Marri', 'nicomarri22@gmail.com', '351-3039834', 'AV.colon 5050', 'nico123', 'admin'),
