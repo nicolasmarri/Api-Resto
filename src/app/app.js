@@ -15,14 +15,13 @@ app.post('/api/user', async (req, res) => {
     const { user, email, password, name, phone, address } = req.body;
 
     if (!email || !password || !user || !name) {
-        res.status = 404;
-        return res.send({ error: 'user, email, name and password are required' });
+        return res.status(404).send({ error: 'user, email, name and password are required' });
     }
     try {
         const insertUser = 'INSERT INTO users (id, user, name, email, phone, address, password, rol) VALUES (?,?,?,?,?,?,?,?);';
         await dbConnection.query(insertUser,
             { replacements: [Math.floor(Math.random() * 10000000), user, name, email, phone, address, password, 'user'] });
-        return res.send(200).json({ status: 'user created' });
+        return res.status(200).send({ status: 'user created' });
     } catch {
         res.status = 500;
         return res.send({ error: 'database error' });

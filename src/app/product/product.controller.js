@@ -13,7 +13,7 @@ router.get('/product', async (req, res) => {
 })
 
 router.post('/product', async (req, res) => {
-        if (req.user.rol !== 'admin') return res(401).send({ error: 'Unauthorized' });
+        if (req.user.rol !== 'admin') return res.status(401).send({ error: 'Unauthorized' });
         try {
                 const { description, price } = req.body;
                 const inserProduct = 'INSERT INTO products (id, description, price) VALUES (?,?,?);';
@@ -27,7 +27,7 @@ router.post('/product', async (req, res) => {
 
 router.put('/product/:id', async (req, res) => {
         const id = req.params.id;
-        if (req.user.rol !== 'admin') return res(401).send({ error: 'Unauthorized' });
+        if (req.user.rol !== 'admin') return res.status(401).send({ error: 'Unauthorized' });
         const { description, price } = req.body;
 
         try {
